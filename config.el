@@ -75,11 +75,11 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(use-package! highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
-  :init
-  :config
-  (setq highlight-indent-guides-method 'bitmap))
+;;(use-package! highlight-indent-guides
+;;  :hook (prog-mode . highlight-indent-guides-mode)
+;;  :init
+;;  :config
+;;  (setq highlight-indent-guides-method 'bitmap))
 
 ;; Nix is now a supported language in init.el
 ;;(use-package! nix-mode

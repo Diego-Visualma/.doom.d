@@ -1,4 +1,4 @@
-# doom-emacs provate config
+# doom-emacs private config
 
 ## Install:
 

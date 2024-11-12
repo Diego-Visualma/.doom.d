@@ -186,35 +186,6 @@
 
 (require 'org-protocol)
 
-(use-package! hledger-mode
-  :after org
-  :config
-  (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
-  (setq hledger-jfile "~/finance/current.journal")
-  (add-to-list 'company-backends 'hledger-company)
-  (add-hook 'hledger-mode-hook
-            (lambda ()
-              (setq-local ac-sources '(hledger-ac-source))))
-  )
-
-(use-package hledger-input
-  :after hledger-mode
-  :bind (("C-c e" . hledger-capture)
-         :map hledger-input-mode-map
-         ("C-c C-b" . popup-balance-at-point))
-  :preface
-  (defun popup-balance-at-point ()
-    "Show balance for account at point in a popup."
-    (interactive)
-    (if-let ((account (thing-at-point 'hledger-account)))
-        (message (hledger-shell-command-to-string (format " balance -N %s "
-                                                          account)))
-      (message "No account at point")))
-  )
-
-(use-package! flycheck-hledger
-  :after (flycheck hledger-mode))
-
 (use-package delve
   :after (org-roam)
   :demand t
@@ -224,3 +195,15 @@
   (setq delve-dashboard-tags '("Tag1" "Tag2"))
   (add-hook #'delve-mode-hook #'delve-compact-view-mode)
   (delve-global-minor-mode))
+
+;; For enablyng copy from WSL emacs to Windows clipboard
+(when (string-match "-[Mm]icrosoft" operating-system-release)
+  ;; WSL: WSL1 has "-Microsoft", WSL2 has "-microsoft-standard"
+ (defun wsl-copy-clip (&rest _args)
+   "Copy current-kill to WSL clip.exe"
+   (setq mytemp (make-temp-file "winclip"))
+   (write-region (current-kill 0 t) nil mytemp)
+   (shell-command (concat "clip.exe < " mytemp))
+   (delete-file mytemp))
+
+ (advice-add 'kill-new :after #'wsl-copy-clip))
